@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
  * @author Kerly Titus
  */
 
-public class Client { 
+public class Client extends Thread{ 
     
     private static int numberOfTransactions;   		/* Number of transactions to process */
     private static int maxNbTransactions;      		/* Maximum number of transactions */
@@ -157,7 +157,11 @@ public class Client {
          
          while (i < getNumberOfTransactions())
          {  
-            // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
+        	//THIS PART IMPLEMENTED BY US
+        	 /* Alternatively, busy-wait until the network input buffer is available */ 
+            while( objNetwork.getInBufferStatus().equals("full") ) {
+            	Thread.yield();
+            }     
                                              	
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
            
@@ -181,7 +185,11 @@ public class Client {
          
          while (i < getNumberOfTransactions())
          {     
-        	 // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
+        	//THIS PART IMPLEMENTED BY US
+        	 /* Alternatively, busy-wait until the network output buffer is available */
+        	 while( objNetwork.getOutBufferStatus().equals("empty")) {
+        		 Thread.yield();
+        	 }  	
                                                                         	
             objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
             
@@ -213,6 +221,33 @@ public class Client {
     	Transactions transact = new Transactions();
     	long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
     
+    	//THIS PART IMPLEMENTED BY US
     	/* Implement here the code for the run method ... */
+    	
+    	//Thread #1 - Client is sending to network
+    	if(getClientOperation().equals("sending")) {
+    		sendClientStartTime = System.currentTimeMillis();
+    		sendTransactions();
+    		sendClientEndTime = System.currentTimeMillis();
+    		
+    		//Printing the time taken by thread
+    		System.out.println("\n Client sending thread is now terminated. The running time was " + (sendClientEndTime - sendClientStartTime) + "milliseconds.");
+    	}
+    	
+    	//Thread #2 - Client is receiving from network
+    	else if(getClientOperation().equals("receiving")) {
+    		receiveClientStartTime = System.currentTimeMillis();
+    		receiveTransactions(transact);
+    		receiveClientEndTime = System.currentTimeMillis();
+    		
+    		//Printing the time taken by thread
+    		System.out.println("\n Client receiving thread is now terminated. The running time was " + (receiveClientEndTime - receiveClientStartTime) + "milliseconds.");
+    		objNetwork.disconnect(objNetwork.getClientIP());
+    	}
+    	
+    	//Nothing happens
+    	else {
+    		System.exit(0);
+    	}
     }
 }

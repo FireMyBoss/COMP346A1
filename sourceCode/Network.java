@@ -9,7 +9,7 @@
  *
  * @author Kerly Titus
  */
-public class Network {
+public class Network extends Thread{
     
     private static int maxNbPackets;                           /* Maximum number of simultaneous transactions handled by the network buffer */
     private static int inputIndexClient, inputIndexServer, outputIndexServer, outputIndexClient;                   /* Network buffer indices for accessing the input buffer (inputIndexClient, outputIndexServer) and output buffer (inputIndexServer, outputIndexClient) */
@@ -550,13 +550,22 @@ public class Network {
      * @return 
      * @param
      */
-    public void run()
-    {	
+	    
+	//PART IMPLEMENTED BY US
+	/* Implement here the code for the run method ... */    
+    public void run() {	
     	System.out.println("\n DEBUG : Network.run() - starting network thread");
     	
-    	while (true)
-    	{
-		/* Implement here the code for the run method ... */
+    	while (true) {
+    		
+    		if(getClientConnectionStatus().equals("disconnected") && getServerConnectionStatus().equals("disconnected")) {
+    			System.out.println("\n Terminating network thread: Client. Status: " + getClientConnectionStatus());
+    			System.out.println("\n Terminating network thread: Server. Status: " + getServerConnectionStatus());
+    		}
+    		else {
+    			Thread.yield();
+    		}
+    		
     	}    
     }
 }
