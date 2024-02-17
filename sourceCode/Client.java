@@ -28,10 +28,8 @@ public class Client extends Thread{
      * @return 
      * @param
      */
-     Client(String operation)
-     { 
-       if (operation.equals("sending"))
-       { 
+     Client(String operation) { 
+       if (operation.equals("sending")) { 
            System.out.println("\n Initializing client sending application ...");
            numberOfTransactions = 0;
            maxNbTransactions = 100;
@@ -42,14 +40,13 @@ public class Client extends Thread{
            readTransactions();
            System.out.println("\n Connecting client to network ...");
            String cip = objNetwork.getClientIP();
-           if (!(objNetwork.connect(cip)))
-           {   System.out.println("\n Terminating client application, network unavailable");
+           if (!(objNetwork.connect(cip))) {   
+        	   System.out.println("\n Terminating client application, network unavailable");
                System.exit(0);
            }
-       	}
+       }
        else
-    	   if (operation.equals("receiving"))
-           { 
+    	   if (operation.equals("receiving")) { 
     		   System.out.println("\n Initializing client receiving application ...");
     		   clientOperation = operation; 
            }
@@ -61,8 +58,7 @@ public class Client extends Thread{
      * @return numberOfTransactions
      * @param
      */
-     public int getNumberOfTransactions()
-     {
+     public int getNumberOfTransactions(){
          return numberOfTransactions;
      }
          
@@ -72,8 +68,7 @@ public class Client extends Thread{
      * @return 
      * @param nbOfTrans
      */
-     public void setNumberOfTransactions(int nbOfTrans)
-     { 
+     public void setNumberOfTransactions(int nbOfTrans){ 
          numberOfTransactions = nbOfTrans;
      }
          
@@ -83,8 +78,7 @@ public class Client extends Thread{
      * @return clientOperation
      * @param
      */
-     public String getClientOperation()
-     {
+     public String getClientOperation(){
          return clientOperation;
      }
          
@@ -94,8 +88,7 @@ public class Client extends Thread{
 	 * @return 
 	 * @param operation
 	 */
-	 public void setClientOperation(String operation)
-	 { 
+	 public void setClientOperation(String operation){ 
 	     clientOperation = operation;
 	 }
          
@@ -105,8 +98,7 @@ public class Client extends Thread{
      * @return 
      * @param
      */
-     public void readTransactions()
-     {
+     public void readTransactions(){
         Scanner inputStream = null;     /* Transactions input file stream */
         int i = 0;                      /* Index of transactions array */
         
@@ -139,7 +131,7 @@ public class Client extends Thread{
         }
         setNumberOfTransactions(i);		/* Record the number of transactions processed */
         
-        System.out.println("\n DEBUG : Client.readTransactions() - " + getNumberOfTransactions() + " transactions processed");
+        //System.out.println("\n DEBUG : Client.readTransactions() - " + getNumberOfTransactions() + " transactions processed");
         
         inputStream.close( );
 
@@ -165,7 +157,7 @@ public class Client extends Thread{
                                              	
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
            
-            System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
+            //System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
             
             objNetwork.send(transaction[i]);                            /* Transmit current transaction */
             i++;
@@ -193,7 +185,7 @@ public class Client extends Thread{
                                                                         	
             objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
             
-            System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
+            //System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
             
             System.out.println(transact);                               	/* Display updated transaction */    
             i++;
@@ -231,7 +223,7 @@ public class Client extends Thread{
     		sendClientEndTime = System.currentTimeMillis();
     		
     		//Printing the time taken by thread
-    		System.out.println("\n Client sending thread is now terminated. The running time was " + (sendClientEndTime - sendClientStartTime) + "milliseconds.");
+    		System.out.println("\n Client sending thread is now terminated. The running time was " + (sendClientEndTime - sendClientStartTime) + " milliseconds.");
     	}
     	
     	//Thread #2 - Client is receiving from network
@@ -241,7 +233,7 @@ public class Client extends Thread{
     		receiveClientEndTime = System.currentTimeMillis();
     		
     		//Printing the time taken by thread
-    		System.out.println("\n Client receiving thread is now terminated. The running time was " + (receiveClientEndTime - receiveClientStartTime) + "milliseconds.");
+    		System.out.println("\n Client receiving thread is now terminated. The running time was " + (receiveClientEndTime - receiveClientStartTime) + " milliseconds.");
     		objNetwork.disconnect(objNetwork.getClientIP());
     	}
     	
